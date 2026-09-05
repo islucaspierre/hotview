@@ -1,56 +1,54 @@
-import { MessageCircle, BarChart3, Paintbrush, Smartphone, Ban, Timer } from "lucide-react"
-
-const features = [
+const benefits = [
   {
-    icon: MessageCircle,
-    title: "Pedido direto no WhatsApp",
-    description: "O cliente monta o carrinho na vitrine e finaliza com uma mensagem pronta.",
+    emoji: "🛍️",
+    title: "Sua loja online",
+    description: "Produtos, categorias, fotos, preços e adicionais em uma página profissional.",
   },
   {
-    icon: BarChart3,
-    title: "Métricas de verdade",
-    description: "Acompanhe visitas, pedidos iniciados, conversão e o produto mais pedido.",
+    emoji: "💬",
+    title: "Pedido pelo WhatsApp",
+    description: "Seu cliente monta o carrinho e envia o pedido pronto para você.",
   },
   {
-    icon: Paintbrush,
-    title: "Personalização completa",
-    description: "Troque cores, tema e capa da loja sem depender de ninguém.",
+    emoji: "📊",
+    title: "Saiba o que está acontecendo",
+    description: "Veja visitas, pedidos iniciados, conversão e produtos mais acessados.",
   },
   {
-    icon: Smartphone,
-    title: "Feita para celular",
-    description: "Seu cliente pede do jeito que já usa: no navegador do celular, sem baixar app.",
+    emoji: "🎨",
+    title: "Sua marca",
+    description: "Logo, cores, capa e identidade da sua empresa.",
   },
   {
-    icon: Ban,
-    title: "Sem comissão por pedido",
-    description: "Diferente de marketplace, você não perde margem em cada venda.",
+    emoji: "📱",
+    title: "Perfeita no celular",
+    description: "Seu cliente compra pelo navegador, sem baixar aplicativo.",
   },
   {
-    icon: Timer,
-    title: "Pronta em minutos",
-    description: "Cadastre produtos e publique sua vitrine no mesmo dia.",
+    emoji: "💰",
+    title: "Sem comissão",
+    description: "Você paga uma mensalidade fixa, independentemente de quanto vende.",
   },
 ]
 
 export function FeaturesSection() {
   return (
-    <section className="border-y border-border/60 bg-card/40">
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
-        <div className="mx-auto max-w-2xl text-center">
+    <section className="bg-muted/30 py-16 sm:py-24">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="flex flex-col items-center gap-4 text-center">
           <h2 className="font-display text-3xl font-bold text-balance text-foreground sm:text-4xl">
-            Tudo que seu negócio precisa para vender online
+            Tudo que você precisa para vender online
           </h2>
         </div>
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {features.map((feature) => (
-            <div key={feature.title} className="flex flex-col gap-3 rounded-2xl border border-border/60 bg-background p-6">
-              <span className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                <feature.icon className="size-5" />
-              </span>
-              <h3 className="text-base font-semibold text-foreground">{feature.title}</h3>
-              <p className="text-sm text-pretty text-muted-foreground">{feature.description}</p>
+        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {benefits.map((benefit) => (
+            <div key={benefit.title} className="flex flex-col gap-3 rounded-2xl border border-border/60 bg-card p-6">
+              <span className="text-3xl">{benefit.emoji}</span>
+              <div className="flex flex-col gap-1.5">
+                <h3 className="font-semibold text-foreground">{benefit.title}</h3>
+                <p className="text-sm text-pretty text-muted-foreground">{benefit.description}</p>
+              </div>
             </div>
           ))}
         </div>

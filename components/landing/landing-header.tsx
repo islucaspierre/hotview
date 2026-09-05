@@ -11,14 +11,11 @@ export function LandingHeader() {
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">
+          <a href="#demonstracao" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+            Ver exemplo
+          </a>
           <a href="#como-funciona" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
             Como funciona
-          </a>
-          <a href="#segmentos" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-            Segmentos
-          </a>
-          <a href="#demonstracao" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-            Demonstração
           </a>
           <a href="#planos" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
             Planos
@@ -41,7 +38,7 @@ export function LandingHeader() {
             render={<Link href="/cadastro" />}
             nativeButton={false}
           >
-            Criar minha vitrine grátis
+            Criar minha loja grátis
           </Button>
         </div>
       </div>

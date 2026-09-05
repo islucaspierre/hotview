@@ -1,62 +1,61 @@
 import Link from "next/link"
-import { ArrowRight, Check } from "lucide-react"
+import { Check, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-const included = [
-  "Vitrine digital com produtos e categorias ilimitados",
-  "Pedidos direto no WhatsApp, sem comissão por venda",
-  "Métricas reais de visitas, pedidos e produto mais pedido",
-  "Temas prontos por segmento, com cores personalizáveis",
-  "Catálogos de exemplo prontos para duplicar e usar",
+const features = [
+  "Loja online com produtos, fotos e preços",
+  "Pedidos direto no WhatsApp",
+  "Painel de métricas (visitas, conversão)",
+  "Personalização de marca (logo, cores, capa)",
+  "Sem comissão por pedido",
 ]
 
 export function PricingSection() {
   return (
-    <section id="planos" className="border-y border-border/60 bg-card/40">
-      <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24">
-        <div className="mx-auto max-w-xl text-center">
-          <h2 className="font-display text-3xl font-bold text-balance text-foreground sm:text-4xl">
-            Um plano simples, sem letra miúda
-          </h2>
-          <p className="mt-3 text-pretty text-muted-foreground">
-            Teste tudo de graça por 15 dias. Se gostar, continue por um valor fixo — sem comissão
-            por pedido.
+    <section id="planos" className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+      <div className="flex flex-col items-center gap-4 text-center">
+        <h2 className="font-display text-3xl font-bold text-balance text-foreground sm:text-4xl">
+          Seu próprio canal de vendas por menos de R$&nbsp;1,33 por dia.
+        </h2>
+        <p className="max-w-xl text-pretty text-muted-foreground">
+          15 dias grátis. Depois, apenas R$&nbsp;39,70/mês. Sem comissão por pedido.
+        </p>
+      </div>
+
+      <div className="mt-12 mx-auto max-w-sm rounded-2xl border border-primary/30 bg-card p-8 ring-1 ring-primary/20 shadow-lg">
+        <div className="flex flex-col gap-1">
+          <p className="text-xs font-semibold uppercase tracking-wide text-primary">Plano único</p>
+          <div className="flex items-baseline gap-1">
+            <span className="font-display text-5xl font-bold text-foreground">R$&nbsp;39,70</span>
+            <span className="text-muted-foreground">/mês</span>
+          </div>
+          <p className="text-sm text-muted-foreground">ou R$&nbsp;1,33/dia — menos do que um café</p>
+        </div>
+
+        <ul className="mt-6 flex flex-col gap-3">
+          {features.map((f) => (
+            <li key={f} className="flex items-start gap-2.5 text-sm text-foreground">
+              <Check className="mt-0.5 size-4 shrink-0 text-primary" />
+              {f}
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-8 flex flex-col gap-3">
+          <Button size="lg" className="w-full rounded-full gap-2" render={<Link href="/cadastro" />} nativeButton={false}>
+            Criar minha loja grátis
+            <ArrowRight className="size-4" />
+          </Button>
+          <p className="text-center text-xs text-muted-foreground">
+            15 dias grátis, sem cartão de crédito.
           </p>
         </div>
-
-        <div className="mx-auto mt-10 max-w-md rounded-3xl border border-primary/30 bg-background p-8 shadow-sm">
-          <span className="rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-            15 dias grátis, sem cartão
-          </span>
-
-          <div className="mt-4 flex items-baseline gap-1">
-            <span className="font-display text-4xl font-bold text-foreground">R$ 39,70</span>
-            <span className="text-sm text-muted-foreground">/mês depois do teste</span>
-          </div>
-          <p className="mt-1 text-sm text-muted-foreground">Pix ou cartão de crédito. Cancele quando quiser.</p>
-
-          <ul className="mt-6 flex flex-col gap-3">
-            {included.map((item) => (
-              <li key={item} className="flex items-start gap-3 text-sm text-foreground">
-                <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
-                  <Check className="size-3" />
-                </span>
-                {item}
-              </li>
-            ))}
-          </ul>
-
-          <Button
-            size="lg"
-            className="mt-8 w-full gap-2 rounded-full"
-            render={<Link href="/cadastro" />}
-            nativeButton={false}
-          >
-            Começar teste grátis
-            <ArrowRight className="size-4" data-icon="inline-end" />
-          </Button>
-        </div>
       </div>
+
+      <p className="mt-8 text-center text-sm text-muted-foreground">
+        Marketplaces cobram entre 12% e 30% de comissão por pedido.{" "}
+        Com a Hotview, você paga mensalidade fixa — independentemente de quanto vende.
+      </p>
     </section>
   )
 }

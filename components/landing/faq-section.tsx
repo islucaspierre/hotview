@@ -2,7 +2,7 @@ const faqs = [
   {
     question: "Preciso saber programar ou mexer com tecnologia?",
     answer:
-      "Não. Você monta a vitrine direto do celular ou computador, escolhendo tema, produtos e fotos — sem precisar de desenvolvedor.",
+      "Não. Você monta sua loja direto do celular ou computador, escolhendo tema, produtos e fotos — sem precisar de desenvolvedor.",
   },
   {
     question: "Preciso ter CNPJ?",
@@ -25,7 +25,7 @@ const faqs = [
   {
     question: "O que acontece se eu não assinar depois do teste grátis?",
     answer:
-      "Sua vitrine continua existindo, mas a edição do cardápio fica bloqueada até você assinar. Alguns dias depois, a página pública também sai do ar até a assinatura ser regularizada.",
+      "Sua loja continua existindo, mas a edição do cardápio fica bloqueada até você assinar. Alguns dias depois, a página pública também sai do ar até a assinatura ser regularizada.",
   },
 ]
 

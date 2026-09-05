@@ -1,20 +1,23 @@
 import type { Metadata } from "next"
 import { LandingHeader } from "@/components/landing/landing-header"
 import { LandingHero } from "@/components/landing/landing-hero"
-import { PainPointsSection } from "@/components/landing/pain-points-section"
-import { HowItWorksSection } from "@/components/landing/how-it-works-section"
-import { SegmentsSection } from "@/components/landing/segments-section"
-import { FeaturesSection } from "@/components/landing/features-section"
+import { QuickProofSection } from "@/components/landing/quick-proof-section"
 import { DemoSection } from "@/components/landing/demo-section"
+import { PainPointsSection } from "@/components/landing/pain-points-section"
+import { SolutionSection } from "@/components/landing/solution-section"
+import { HowItWorksSection } from "@/components/landing/how-it-works-section"
+import { FeaturesSection } from "@/components/landing/features-section"
+import { CasesSection } from "@/components/landing/cases-section"
+import { MarketplaceSection } from "@/components/landing/marketplace-section"
 import { PricingSection } from "@/components/landing/pricing-section"
 import { FaqSection } from "@/components/landing/faq-section"
 import { FinalCtaSection } from "@/components/landing/final-cta-section"
 import { LandingFooter } from "@/components/landing/landing-footer"
 
 export const metadata: Metadata = {
-  title: "Hotview | Vitrine digital para vender pelo WhatsApp",
+  title: "Hotview | Loja online para vender pelo WhatsApp",
   description:
-    "Uma plataforma para pequenos negócios criarem sua própria vitrine digital e venderem diretamente pelo WhatsApp.",
+    "Crie sua loja online, receba pedidos pelo WhatsApp e venda sem pagar comissão por pedido. 15 dias grátis.",
 }
 
 export default function ParaLojistasPage() {
@@ -23,11 +26,14 @@ export default function ParaLojistasPage() {
       <LandingHeader />
       <main className="flex-1">
         <LandingHero />
-        <PainPointsSection />
-        <HowItWorksSection />
-        <SegmentsSection />
-        <FeaturesSection />
+        <QuickProofSection />
         <DemoSection />
+        <PainPointsSection />
+        <SolutionSection />
+        <HowItWorksSection />
+        <FeaturesSection />
+        <CasesSection />
+        <MarketplaceSection />
         <PricingSection />
         <FaqSection />
         <FinalCtaSection />

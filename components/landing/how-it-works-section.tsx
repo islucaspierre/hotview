@@ -1,57 +1,45 @@
-import { Palette, ListPlus, Share2 } from "lucide-react"
-
 const steps = [
   {
-    icon: Palette,
-    title: "Escolha o tema do seu negócio",
-    description:
-      "Selecione uma paleta pronta para o seu segmento — hamburgueria, açaí, pizzaria e mais — ou deixe no padrão premium.",
+    number: "01",
+    title: "Crie sua conta",
+    description: "Menos de 2 minutos. Sem cartão de crédito.",
   },
   {
-    icon: ListPlus,
-    title: "Cadastre seus produtos",
-    description:
-      "Adicione fotos, preços, categorias e adicionais em poucos minutos, direto do celular ou computador.",
+    number: "02",
+    title: "Monte sua loja",
+    description: "Adicione produtos, fotos, preços e categorias — tudo em um painel simples.",
   },
   {
-    icon: Share2,
-    title: "Compartilhe o link e receba pedidos",
-    description:
-      "Envie o link da vitrine nas redes sociais. O cliente monta o pedido e ele chega prontinho no seu WhatsApp.",
+    number: "03",
+    title: "Compartilhe seu link",
+    description: "Cole no Instagram, WhatsApp, Google, ou gere um QR Code para imprimir.",
   },
 ]
 
 export function HowItWorksSection() {
   return (
-    <section id="como-funciona" className="border-y border-border/60 bg-card/40">
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="font-display text-3xl font-bold text-balance text-foreground sm:text-4xl">
-            Do cadastro ao primeiro pedido em três passos
-          </h2>
-          <p className="mt-3 text-pretty text-muted-foreground">
-            Sem precisar contratar desenvolvedor nem entender de tecnologia.
-          </p>
-        </div>
-
-        <div className="mt-12 grid gap-6 sm:grid-cols-3">
-          {steps.map((step, index) => (
-            <div
-              key={step.title}
-              className="relative rounded-2xl border border-border/60 bg-background p-6"
-            >
-              <span className="font-display text-sm font-bold text-primary/50">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              <span className="mt-3 flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <step.icon className="size-5" />
-              </span>
-              <h3 className="mt-4 text-base font-semibold text-foreground">{step.title}</h3>
-              <p className="mt-2 text-sm text-pretty text-muted-foreground">{step.description}</p>
-            </div>
-          ))}
-        </div>
+    <section id="como-funciona" className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+      <div className="flex flex-col items-center gap-4 text-center">
+        <h2 className="font-display text-3xl font-bold text-balance text-foreground sm:text-4xl">
+          Como funciona
+        </h2>
       </div>
+
+      <div className="mt-12 grid gap-6 sm:grid-cols-3">
+        {steps.map((step) => (
+          <div key={step.number} className="flex flex-col gap-4 rounded-2xl border border-border/60 bg-card p-6">
+            <span className="font-display text-4xl font-bold text-primary/30">{step.number}</span>
+            <div className="flex flex-col gap-1.5">
+              <h3 className="font-semibold text-foreground">{step.title}</h3>
+              <p className="text-sm text-pretty text-muted-foreground">{step.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <p className="mt-10 text-center text-lg font-semibold text-foreground">
+        E pronto. Você está vendendo online.
+      </p>
     </section>
   )
 }

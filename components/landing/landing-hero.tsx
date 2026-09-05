@@ -6,7 +6,7 @@ import { StaticStorePreview } from "@/components/landing/static-store-preview"
 export function LandingHero() {
   return (
     <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
-      <div className="flex flex-col items-center gap-12 lg:flex-row lg:items-center lg:gap-16">
+      <div className="flex flex-col items-center gap-12 lg:flex-row lg:items-start lg:gap-16">
         {/* Text column */}
         <div className="flex flex-1 flex-col items-center gap-6 text-center lg:items-start lg:text-left">
           <h1 className="font-display text-4xl font-bold text-balance text-foreground sm:text-5xl lg:text-6xl">

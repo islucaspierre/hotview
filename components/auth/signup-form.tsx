@@ -40,7 +40,7 @@ export function SignupForm() {
       setIsSubmitting(false)
       return
     }
-    if (data.session) router.push("/dashboard")
+    if (data.session) router.push("/onboarding")
     else setMessage("Conta criada. Confira seu e-mail para confirmar o cadastro.")
     setIsSubmitting(false)
   }

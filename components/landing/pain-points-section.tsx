@@ -1,7 +1,7 @@
 const dialogues = [
-  ""Me manda o cardápio?"",
-  ""Esse preço ainda é esse?"",
-  ""Tem esse produto?"",
+  '“Me manda o cardápio?”',
+  '“Esse preço ainda é esse?”',
+  '“Tem esse produto?”',
 ]
 
 export function PainPointsSection() {

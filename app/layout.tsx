@@ -9,9 +9,12 @@ const _baloo2 = Baloo_2({ subsets: ['latin'], variable: '--font-baloo-2' })
 export const metadata: Metadata = {
   title: 'Hotview | Sua vitrine digital no WhatsApp',
   description: 'A plataforma para pequenos negócios criarem sua própria vitrine digital e venderem diretamente pelo WhatsApp.',
-  generator: 'v0.app',
   icons: {
     icon: [
+      {
+        url: '/icon.svg',
+        type: 'image/svg+xml',
+      },
       {
         url: '/icon-light-32x32.png',
         media: '(prefers-color-scheme: light)',
@@ -19,10 +22,6 @@ export const metadata: Metadata = {
       {
         url: '/icon-dark-32x32.png',
         media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
       },
     ],
     apple: '/apple-icon.png',

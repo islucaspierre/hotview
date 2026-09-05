@@ -42,8 +42,8 @@ export function LandingHero() {
           </div>
         </div>
 
-        {/* Mockup column */}
-        <div className="flex w-full justify-center lg:w-auto lg:flex-none">
+        {/* Mockup column — oculto no mobile (já aparece na seção "Veja como fica") */}
+        <div className="hidden w-full justify-center lg:flex lg:w-auto lg:flex-none">
           <StaticStorePreview />
         </div>
       </div>

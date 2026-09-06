@@ -21,10 +21,10 @@ export function CartSheet({ store }: { store: Store }) {
   const { items, removeItem, updateQuantity, subtotal, isCartOpen, setCartOpen, clear } = useCart()
   const [step, setStep] = useState<CheckoutStep>("cart")
   const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod | null>(null)
-  const [rua, setRua] = useState("")
-  const [numero, setNumero] = useState("")
-  const [bairro, setBairro] = useState("")
-  const [complemento, setComplemento] = useState("")
+  const [rua, setRua] = useState(() => { try { return localStorage.getItem("hv_rua") ?? "" } catch { return "" } })
+  const [numero, setNumero] = useState(() => { try { return localStorage.getItem("hv_numero") ?? "" } catch { return "" } })
+  const [bairro, setBairro] = useState(() => { try { return localStorage.getItem("hv_bairro") ?? "" } catch { return "" } })
+  const [complemento, setComplemento] = useState(() => { try { return localStorage.getItem("hv_complemento") ?? "" } catch { return "" } })
 
   const minOrder = store.minOrder ?? 0
   const missingToMin = Math.max(0, minOrder - subtotal)
@@ -94,6 +94,12 @@ export function CartSheet({ store }: { store: Store }) {
       const { error: addonsError } = await supabase.from("order_item_addons").insert(addonRows)
       if (addonsError) console.error("Falha ao salvar adicionais do pedido", addonsError)
     }
+    try {
+      localStorage.setItem("hv_rua", rua.trim())
+      localStorage.setItem("hv_numero", numero.trim())
+      localStorage.setItem("hv_bairro", bairro.trim())
+      localStorage.setItem("hv_complemento", complemento.trim())
+    } catch {}
     const message = buildWhatsAppOrderMessage(store, items, subtotal, deliveryMethod, fullAddress, deliveryFee)
     const url = buildWhatsAppUrl(store.whatsapp, message)
     clear()

@@ -1,7 +1,14 @@
 import type { CartItem, Store } from "@/lib/types"
 import { formatCurrency } from "@/lib/format"
 
-export function buildWhatsAppOrderMessage(store: Store, items: CartItem[], subtotal: number): string {
+export function buildWhatsAppOrderMessage(
+  store: Store,
+  items: CartItem[],
+  subtotal: number,
+  deliveryMethod?: "delivery" | "pickup",
+  deliveryAddress?: string,
+  deliveryFee?: number,
+): string {
   const lines: string[] = []
 
   lines.push(`Olá, ${store.name}! Quero fazer um pedido:`)
@@ -24,7 +31,26 @@ export function buildWhatsAppOrderMessage(store: Store, items: CartItem[], subto
   }
 
   lines.push("")
-  lines.push(`Total: ${formatCurrency(subtotal)}`)
+
+  const fee = deliveryFee ?? 0
+  const total = subtotal + fee
+
+  if (deliveryMethod === "delivery") {
+    lines.push(`Subtotal: ${formatCurrency(subtotal)}`)
+    lines.push(`Taxa de entrega: ${fee === 0 ? "Grátis" : formatCurrency(fee)}`)
+    lines.push(`*Total: ${formatCurrency(total)}*`)
+    if (deliveryAddress) {
+      lines.push("")
+      lines.push(`📍 Endereço de entrega: ${deliveryAddress}`)
+    }
+  } else if (deliveryMethod === "pickup") {
+    lines.push(`*Total: ${formatCurrency(subtotal)}*`)
+    lines.push("")
+    lines.push("🏪 Vou retirar no local.")
+  } else {
+    lines.push(`Total: ${formatCurrency(subtotal)}`)
+  }
+
   lines.push("")
   lines.push("Aguardo confirmação, obrigado!")
 

@@ -53,6 +53,7 @@ export interface Store {
   hours: StoreHours[]
   noteLabel?: string | null
   notePlaceholder?: string | null
+  deliveryFee?: number | null
 }
 
 export interface ProductAddon {

@@ -162,27 +162,42 @@ export function PersonalizationForm() {
             />
           </div>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="deliveryTime">Tempo de entrega (min)</Label>
-            <div className="flex items-center gap-2">
-              <Input
-                id="deliveryTime"
-                type="number"
-                min={0}
-                step={5}
-                value={store.deliveryTimeMinutes[0]}
-                onChange={(e) => updateStore({ deliveryTimeMinutes: [Number(e.target.value) || 0, store.deliveryTimeMinutes[1]] })}
-                aria-label="Tempo mínimo de entrega"
-              />
-              <span className="text-sm text-muted-foreground">até</span>
-              <Input
-                type="number"
-                min={0}
-                step={5}
-                value={store.deliveryTimeMinutes[1]}
-                onChange={(e) => updateStore({ deliveryTimeMinutes: [store.deliveryTimeMinutes[0], Number(e.target.value) || 0] })}
-                aria-label="Tempo máximo de entrega"
-              />
-            </div>
+            <Label htmlFor="deliveryFee">Taxa de entrega (R$)</Label>
+            <Input
+              id="deliveryFee"
+              type="number"
+              min={0}
+              step={0.5}
+              value={store.deliveryFee ?? 0}
+              onChange={(e) => updateStore({ deliveryFee: Number(e.target.value) || 0 })}
+            />
+            <p className="text-xs text-muted-foreground">
+              Valor cobrado na entrega. Use 0 para frete grátis.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="deliveryTime">Tempo de entrega (min)</Label>
+          <div className="flex items-center gap-2">
+            <Input
+              id="deliveryTime"
+              type="number"
+              min={0}
+              step={5}
+              value={store.deliveryTimeMinutes[0]}
+              onChange={(e) => updateStore({ deliveryTimeMinutes: [Number(e.target.value) || 0, store.deliveryTimeMinutes[1]] })}
+              aria-label="Tempo mínimo de entrega"
+            />
+            <span className="text-sm text-muted-foreground">até</span>
+            <Input
+              type="number"
+              min={0}
+              step={5}
+              value={store.deliveryTimeMinutes[1]}
+              onChange={(e) => updateStore({ deliveryTimeMinutes: [store.deliveryTimeMinutes[0], Number(e.target.value) || 0] })}
+              aria-label="Tempo máximo de entrega"
+            />
           </div>
         </div>
 

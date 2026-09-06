@@ -60,6 +60,7 @@ export function CartSheet({ store }: { store: Store }) {
       .select("id")
       .single()
     if (error || !order) {
+      console.error("[cart] orders insert error:", error)
       toast.error("Não foi possível registrar o pedido. Tente novamente.")
       return
     }

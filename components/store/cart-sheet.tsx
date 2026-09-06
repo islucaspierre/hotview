@@ -54,35 +54,34 @@ export function CartSheet({ store }: { store: Store }) {
       return
     }
     const supabase = createClient()
-    const { data: order, error } = await supabase
+    const orderId = crypto.randomUUID()
+    const { error } = await supabase
       .from("orders")
-      .insert({ store_id: store.id, status: "sent", subtotal: total })
-      .select("id")
-      .single()
-    if (error || !order) {
+      .insert({ id: orderId, store_id: store.id, status: "sent", subtotal: total })
+    if (error) {
       console.error("[cart] orders insert error:", error)
       toast.error("Não foi possível registrar o pedido. Tente novamente.")
       return
     }
-    const { data: insertedItems, error: itemsError } = await supabase
+    const orderItemsToInsert = items.map((item) => ({
+      id: crypto.randomUUID(),
+      order_id: orderId,
+      product_id: item.productId,
+      product_name: item.name,
+      unit_price: item.unitPrice,
+      quantity: item.quantity,
+      note: item.note,
+    }))
+    const { error: itemsError } = await supabase
       .from("order_items")
-      .insert(
-        items.map((item) => ({
-          order_id: order.id,
-          product_id: item.productId,
-          product_name: item.name,
-          unit_price: item.unitPrice,
-          quantity: item.quantity,
-          note: item.note,
-        }))
-      )
-      .select("id")
+      .insert(orderItemsToInsert)
     if (itemsError) {
+      console.error("[cart] order_items insert error:", itemsError)
       toast.error("Não foi possível registrar os itens do pedido.")
       return
     }
     const addonRows = items.flatMap((item, index) => {
-      const orderItemId = insertedItems?.[index]?.id
+      const orderItemId = orderItemsToInsert[index]?.id
       if (!orderItemId) return []
       return item.addons.map((addon) => ({
         order_item_id: orderItemId,

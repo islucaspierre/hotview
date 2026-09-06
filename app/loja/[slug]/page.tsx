@@ -15,9 +15,22 @@ export async function generateMetadata({
   const data = await getPublicStore(slug)
   if (!data || "unavailable" in data) return {}
   const { store } = data
+  const images = store.logo ? [{ url: store.logo, width: 512, height: 512, alt: store.name }] : []
   return {
     title: `${store.name} | Cardápio digital`,
     description: store.description,
+    openGraph: {
+      title: store.name,
+      description: store.description ?? `Faça seu pedido na ${store.name}`,
+      images,
+      type: "website",
+    },
+    twitter: {
+      card: images.length ? "summary" : "summary_large_image",
+      title: store.name,
+      description: store.description ?? `Faça seu pedido na ${store.name}`,
+      images,
+    },
   }
 }
 

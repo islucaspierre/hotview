@@ -3,13 +3,13 @@ import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { Toaster } from "@/components/ui/sonner"
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "lucaspierremacedo.lmp@gmail.com"
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  if (!user || user.email !== ADMIN_EMAIL) redirect("/")
+  if (!ADMIN_EMAIL || !user || user.email !== ADMIN_EMAIL) redirect("/")
 
   return (
     <div className="min-h-svh bg-background text-foreground">

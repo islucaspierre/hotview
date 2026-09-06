@@ -21,7 +21,10 @@ export function CartSheet({ store }: { store: Store }) {
   const { items, removeItem, updateQuantity, subtotal, isCartOpen, setCartOpen, clear } = useCart()
   const [step, setStep] = useState<CheckoutStep>("cart")
   const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod | null>(null)
-  const [address, setAddress] = useState("")
+  const [rua, setRua] = useState("")
+  const [numero, setNumero] = useState("")
+  const [bairro, setBairro] = useState("")
+  const [complemento, setComplemento] = useState("")
 
   const minOrder = store.minOrder ?? 0
   const missingToMin = Math.max(0, minOrder - subtotal)
@@ -29,19 +32,25 @@ export function CartSheet({ store }: { store: Store }) {
   const deliveryFee = deliveryMethod === "delivery" ? (store.deliveryFee ?? 0) : 0
   const total = subtotal + deliveryFee
 
+  const fullAddress = [rua.trim(), numero.trim(), bairro.trim(), complemento.trim()].filter(Boolean).join(", ")
+  const deliveryReady = rua.trim() && numero.trim() && bairro.trim()
+
   function handleOpenChange(open: boolean) {
     setCartOpen(open)
     if (!open) {
       setStep("cart")
       setDeliveryMethod(null)
-      setAddress("")
+      setRua("")
+      setNumero("")
+      setBairro("")
+      setComplemento("")
     }
   }
 
   async function handleSendOrder() {
     if (belowMinimum || !deliveryMethod) return
-    if (deliveryMethod === "delivery" && !address.trim()) {
-      toast.error("Por favor, informe o endereço de entrega.")
+    if (deliveryMethod === "delivery" && !deliveryReady) {
+      toast.error("Por favor, preencha rua, número e bairro.")
       return
     }
     const supabase = createClient()
@@ -85,7 +94,7 @@ export function CartSheet({ store }: { store: Store }) {
       const { error: addonsError } = await supabase.from("order_item_addons").insert(addonRows)
       if (addonsError) console.error("Falha ao salvar adicionais do pedido", addonsError)
     }
-    const message = buildWhatsAppOrderMessage(store, items, subtotal, deliveryMethod, address.trim(), deliveryFee)
+    const message = buildWhatsAppOrderMessage(store, items, subtotal, deliveryMethod, fullAddress, deliveryFee)
     const url = buildWhatsAppUrl(store.whatsapp, message)
     clear()
     setCartOpen(false)
@@ -203,7 +212,7 @@ export function CartSheet({ store }: { store: Store }) {
                     disabled={belowMinimum}
                     className="h-12 w-full gap-2 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
                   >
-                    Ir para o checkout
+                    Continuar
                   </Button>
                 </div>
               </>
@@ -259,20 +268,37 @@ export function CartSheet({ store }: { store: Store }) {
               </div>
 
               {deliveryMethod === "delivery" && (
-                <div className="flex flex-col gap-2">
-                  <label
-                    className="text-sm font-semibold text-card-foreground"
-                    htmlFor="delivery-address"
-                  >
-                    Endereço de entrega
-                  </label>
-                  <textarea
-                    id="delivery-address"
-                    rows={3}
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    placeholder="Rua, número, bairro, complemento..."
-                    className="w-full resize-none rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                <div className="flex flex-col gap-3">
+                  <p className="text-sm font-semibold text-card-foreground">Endereço de entrega</p>
+                  <input
+                    type="text"
+                    value={rua}
+                    onChange={(e) => setRua(e.target.value)}
+                    placeholder="Rua / Avenida *"
+                    className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                  <div className="grid grid-cols-2 gap-3">
+                    <input
+                      type="text"
+                      value={numero}
+                      onChange={(e) => setNumero(e.target.value)}
+                      placeholder="Número *"
+                      className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    />
+                    <input
+                      type="text"
+                      value={bairro}
+                      onChange={(e) => setBairro(e.target.value)}
+                      placeholder="Bairro *"
+                      className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    />
+                  </div>
+                  <input
+                    type="text"
+                    value={complemento}
+                    onChange={(e) => setComplemento(e.target.value)}
+                    placeholder="Complemento (opcional)"
+                    className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                   />
                 </div>
               )}
@@ -301,7 +327,7 @@ export function CartSheet({ store }: { store: Store }) {
             <div className="border-t border-border px-5 py-4">
               <Button
                 onClick={handleSendOrder}
-                disabled={!deliveryMethod || (deliveryMethod === "delivery" && !address.trim())}
+                disabled={!deliveryMethod || (deliveryMethod === "delivery" && !deliveryReady)}
                 className="h-12 w-full gap-2 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
               >
                 <MessageCircle className="size-5" />

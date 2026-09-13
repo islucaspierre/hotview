@@ -63,16 +63,17 @@ export function LandingHero() {
         </div>
 
         {/* Imagem dos telefones — altura fixa para não dominar a tela */}
-        <div className="relative h-[320px] w-full overflow-hidden">
+        <div className="relative h-[340px] w-full overflow-hidden">
           <Image
             src="/hero01.png"
             alt="Exemplos de lojas criadas na Hotview"
             fill
             priority
-            className="object-cover object-top"
+            className="object-cover object-center"
           />
-          {/* Fade no topo para suavizar a transição */}
-          <div className="absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-[#001e16] to-transparent" />
+          {/* Fades para integrar com o fundo */}
+          <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[#001e16] to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#001e16] to-transparent" />
         </div>
       </div>
 

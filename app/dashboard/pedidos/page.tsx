@@ -1,10 +1,13 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { Package, Clock, MapPin, Store as StoreIcon, ChevronDown, ChevronUp } from "lucide-react"
+import { useEffect, useState, useCallback } from "react"
+import { Package, Clock, ChevronDown, ChevronUp } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { formatCurrency } from "@/lib/format"
 import { useStoreSettings } from "@/lib/store-settings-context"
+import { Button } from "@/components/ui/button"
+
+const PAGE_SIZE = 20
 
 interface OrderItem {
   id: string
@@ -26,33 +29,60 @@ export default function PedidosPage() {
   const { store } = useStoreSettings()
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
+  const [hasMore, setHasMore] = useState(false)
+  const [page, setPage] = useState(0)
   const [expanded, setExpanded] = useState<Set<string>>(new Set())
 
-  useEffect(() => {
+  const fetchPage = useCallback(async (pageIndex: number, replace: boolean) => {
     if (!store.id) return
     const supabase = createClient()
-    supabase
+    const from = pageIndex * PAGE_SIZE
+    const to = from + PAGE_SIZE - 1
+
+    const { data: orderRows } = await supabase
       .from("orders")
       .select("id, created_at, status, subtotal")
       .eq("store_id", store.id)
       .order("created_at", { ascending: false })
-      .limit(100)
-      .then(async ({ data: orderRows }) => {
-        if (!orderRows || orderRows.length === 0) { setLoading(false); return }
-        const ids = orderRows.map((o) => o.id)
-        const { data: itemRows } = await supabase
-          .from("order_items")
-          .select("id, order_id, product_name, quantity, unit_price, note")
-          .in("order_id", ids)
-        const itemsByOrder: Record<string, OrderItem[]> = {}
-        for (const item of itemRows ?? []) {
-          if (!itemsByOrder[item.order_id]) itemsByOrder[item.order_id] = []
-          itemsByOrder[item.order_id].push(item)
-        }
-        setOrders(orderRows.map((o) => ({ ...o, items: itemsByOrder[o.id] ?? [] })))
-        setLoading(false)
-      })
+      .range(from, to)
+
+    if (!orderRows || orderRows.length === 0) {
+      setHasMore(false)
+      return
+    }
+
+    setHasMore(orderRows.length === PAGE_SIZE)
+
+    const ids = orderRows.map((o) => o.id)
+    const { data: itemRows } = await supabase
+      .from("order_items")
+      .select("id, order_id, product_name, quantity, unit_price, note")
+      .in("order_id", ids)
+
+    const itemsByOrder: Record<string, OrderItem[]> = {}
+    for (const item of itemRows ?? []) {
+      if (!itemsByOrder[item.order_id]) itemsByOrder[item.order_id] = []
+      itemsByOrder[item.order_id].push(item)
+    }
+
+    const mapped = orderRows.map((o) => ({ ...o, items: itemsByOrder[o.id] ?? [] }))
+    setOrders((prev) => replace ? mapped : [...prev, ...mapped])
   }, [store.id])
+
+  useEffect(() => {
+    if (!store.id) return
+    setLoading(true)
+    fetchPage(0, true).finally(() => setLoading(false))
+  }, [store.id, fetchPage])
+
+  async function handleLoadMore() {
+    setLoadingMore(true)
+    const nextPage = page + 1
+    await fetchPage(nextPage, false)
+    setPage(nextPage)
+    setLoadingMore(false)
+  }
 
   function toggleExpanded(id: string) {
     setExpanded((prev) => {
@@ -63,7 +93,10 @@ export default function PedidosPage() {
   }
 
   function formatDate(iso: string) {
-    return new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }).format(new Date(iso))
+    return new Intl.DateTimeFormat("pt-BR", {
+      day: "2-digit", month: "2-digit", year: "numeric",
+      hour: "2-digit", minute: "2-digit",
+    }).format(new Date(iso))
   }
 
   return (
@@ -71,7 +104,9 @@ export default function PedidosPage() {
       <div className="mb-6">
         <h1 className="font-display text-2xl font-semibold text-foreground">Pedidos</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          {loading ? "Carregando..." : `${orders.length} pedido${orders.length !== 1 ? "s" : ""} recebido${orders.length !== 1 ? "s" : ""}`}
+          {loading
+            ? "Carregando..."
+            : `${orders.length} pedido${orders.length !== 1 ? "s" : ""} carregado${orders.length !== 1 ? "s" : ""}${hasMore ? " — role para ver mais" : ""}`}
         </p>
       </div>
 
@@ -93,19 +128,16 @@ export default function PedidosPage() {
                 className="flex w-full items-center justify-between gap-3 px-4 py-4 text-left hover:bg-secondary/30 transition-colors"
               >
                 <div className="flex flex-1 flex-col gap-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-card-foreground">
-                      {order.items.length > 0
-                        ? order.items.map((i) => `${i.quantity}× ${i.product_name}`).join(", ").slice(0, 60) + (order.items.length > 2 ? "…" : "")
-                        : "Pedido"}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                    <span className="flex items-center gap-1">
-                      <Clock className="size-3" />
-                      {formatDate(order.created_at)}
-                    </span>
-                  </div>
+                  <span className="text-sm font-semibold text-card-foreground truncate">
+                    {order.items.length > 0
+                      ? order.items.map((i) => `${i.quantity}× ${i.product_name}`).join(", ").slice(0, 60) +
+                        (order.items.reduce((s, i) => s + i.quantity, 0) > 2 ? "…" : "")
+                      : "Pedido"}
+                  </span>
+                  <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <Clock className="size-3" />
+                    {formatDate(order.created_at)}
+                  </span>
                 </div>
                 <div className="flex items-center gap-3 shrink-0">
                   <span className="text-sm font-bold text-primary">{formatCurrency(order.subtotal)}</span>
@@ -134,6 +166,19 @@ export default function PedidosPage() {
           )
         })}
       </div>
+
+      {hasMore && (
+        <div className="mt-6 flex justify-center">
+          <Button
+            variant="secondary"
+            onClick={handleLoadMore}
+            disabled={loadingMore}
+            className="rounded-full px-6"
+          >
+            {loadingMore ? "Carregando..." : "Carregar mais pedidos"}
+          </Button>
+        </div>
+      )}
     </div>
   )
 }

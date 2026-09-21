@@ -54,6 +54,7 @@ export interface Store {
   noteLabel?: string | null
   notePlaceholder?: string | null
   deliveryFee?: number | null
+  pixKey?: string | null
 }
 
 export interface ProductAddon {

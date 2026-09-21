@@ -232,6 +232,30 @@ export function PersonalizationForm() {
 
       <section className="flex flex-col gap-4">
         <div>
+          <h2 className="font-display text-lg font-semibold text-foreground">Pagamentos</h2>
+          <p className="text-sm text-muted-foreground">
+            Configure a chave Pix para oferecer pagamento antecipado no checkout da vitrine.
+          </p>
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="pixKey">Chave Pix</Label>
+          <Input
+            id="pixKey"
+            value={store.pixKey ?? ""}
+            onChange={(e) => updateStore({ pixKey: e.target.value || null })}
+            placeholder="CPF, CNPJ, e-mail, telefone ou chave aleatória"
+          />
+          <p className="text-xs text-muted-foreground">
+            O cliente receberá um código Pix Copia e Cola gerado automaticamente com o valor do pedido.
+            O pagamento vai direto para sua conta — a Hotview não intermedia.
+          </p>
+        </div>
+      </section>
+
+      <Separator />
+
+      <section className="flex flex-col gap-4">
+        <div>
           <h2 className="font-display text-lg font-semibold text-foreground">Horário de funcionamento</h2>
           <p className="text-sm text-muted-foreground">
             Define o "Aberto agora" / "Fechado agora" que aparece na sua vitrine pública.

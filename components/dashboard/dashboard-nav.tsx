@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { LayoutDashboard, LayoutTemplate, Palette, Package, CreditCard, ExternalLink, Menu, LogOut } from "lucide-react"
+import { LayoutDashboard, LayoutTemplate, Palette, Package, CreditCard, ExternalLink, Menu, LogOut, ShoppingBag, Tag } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
@@ -12,6 +12,8 @@ import { Button } from "@/components/ui/button"
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Visão geral", icon: LayoutDashboard },
+  { href: "/dashboard/pedidos", label: "Pedidos", icon: ShoppingBag },
+  { href: "/dashboard/cupons", label: "Cupons", icon: Tag },
   { href: "/dashboard/vitrines-prontas", label: "Vitrines prontas", icon: LayoutTemplate },
   { href: "/dashboard/personalizacao", label: "Personalização", icon: Palette },
   { href: "/dashboard/produtos", label: "Produtos", icon: Package },

@@ -24,6 +24,7 @@ type StoreRow = {
   note_label?: string | null
   note_placeholder?: string | null
   delivery_fee?: number | null
+  pix_key?: string | null
 }
 
 export function mapStore(row: StoreRow, hours: StoreHours[] = []): Store {
@@ -36,6 +37,7 @@ export function mapStore(row: StoreRow, hours: StoreHours[] = []): Store {
     rating: Number(row.rating), reviewsCount: row.reviews_count, hours,
     noteLabel: row.note_label ?? null, notePlaceholder: row.note_placeholder ?? null,
     deliveryFee: row.delivery_fee != null ? Number(row.delivery_fee) : 0,
+    pixKey: row.pix_key ?? null,
   }
 }
 
@@ -111,7 +113,7 @@ export async function getOwnerStore() {
 }
 
 export function storeRowFromStore(store: Store, ownerId: string) {
-  return { owner_id: ownerId, slug: store.slug, name: store.name, tagline: store.tagline, description: store.description, logo: store.logo, cover_image: store.coverImage, whatsapp: store.whatsapp, instagram: store.instagram ?? null, theme: store.theme, theme_overrides: store.themeOverrides ?? null, min_order: store.minOrder, delivery_min_minutes: store.deliveryTimeMinutes[0], delivery_max_minutes: store.deliveryTimeMinutes[1], rating: store.rating, reviews_count: store.reviewsCount, note_label: store.noteLabel ?? null, note_placeholder: store.notePlaceholder ?? null, delivery_fee: store.deliveryFee ?? 0 }
+  return { owner_id: ownerId, slug: store.slug, name: store.name, tagline: store.tagline, description: store.description, logo: store.logo, cover_image: store.coverImage, whatsapp: store.whatsapp, instagram: store.instagram ?? null, theme: store.theme, theme_overrides: store.themeOverrides ?? null, min_order: store.minOrder, delivery_min_minutes: store.deliveryTimeMinutes[0], delivery_max_minutes: store.deliveryTimeMinutes[1], rating: store.rating, reviews_count: store.reviewsCount, note_label: store.noteLabel ?? null, note_placeholder: store.notePlaceholder ?? null, delivery_fee: store.deliveryFee ?? 0, pix_key: store.pixKey ?? null }
 }
 
 export function formatHours(hours: StoreHours[]) { return hours.map((hour, index) => ({ day_of_week: index, open_time: hour.open || null, close_time: hour.close || null, is_closed: Boolean(hour.closed) })) }

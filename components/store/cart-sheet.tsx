@@ -8,7 +8,6 @@ import { useCart } from "@/lib/cart-context"
 import { formatCurrency } from "@/lib/format"
 import { buildWhatsAppOrderMessage, buildWhatsAppUrl } from "@/lib/whatsapp"
 import { buildPixCopiaECola } from "@/lib/pix"
-import { createClient } from "@/lib/supabase/client"
 import { toast } from "sonner"
 import { getThemeStyle } from "@/lib/theme-style"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
@@ -118,50 +117,31 @@ export function CartSheet({ store, isClosed = false }: { store: Store; isClosed?
       toast.error("A loja está fechada no momento.")
       return
     }
-    const supabase = createClient()
-    const orderId = crypto.randomUUID()
-    const { error } = await supabase
-      .from("orders")
-      .insert({ id: orderId, store_id: store.id, status: "sent", subtotal: total })
-    if (error) {
-      console.error("[cart] orders insert error:", error)
+    const res = await fetch("/api/order/create", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        storeId: store.id,
+        subtotal: total,
+        couponCode: coupon.status === "valid" ? coupon.code : undefined,
+        items: items.map((item) => ({
+          productId: item.productId,
+          productName: item.name,
+          unitPrice: item.unitPrice,
+          quantity: item.quantity,
+          note: item.note ?? null,
+          addons: item.addons.map((addon) => ({
+            addonId: addon.addonId,
+            addonName: addon.name,
+            price: addon.price,
+          })),
+        })),
+      }),
+    })
+    if (!res.ok) {
+      console.error("[cart] order create failed:", res.status)
       toast.error("Não foi possível registrar o pedido. Tente novamente.")
       return
-    }
-    const orderItemsToInsert = items.map((item) => ({
-      id: crypto.randomUUID(),
-      order_id: orderId,
-      product_id: item.productId,
-      product_name: item.name,
-      unit_price: item.unitPrice,
-      quantity: item.quantity,
-      note: item.note,
-    }))
-    const { error: itemsError } = await supabase
-      .from("order_items")
-      .insert(orderItemsToInsert)
-    if (itemsError) {
-      console.error("[cart] order_items insert error:", itemsError)
-      toast.error("Não foi possível registrar os itens do pedido.")
-      return
-    }
-    const addonRows = items.flatMap((item, index) => {
-      const orderItemId = orderItemsToInsert[index]?.id
-      if (!orderItemId) return []
-      return item.addons.map((addon) => ({
-        order_item_id: orderItemId,
-        addon_id: addon.addonId,
-        addon_name: addon.name,
-        price: addon.price,
-      }))
-    })
-    if (addonRows.length > 0) {
-      const { error: addonsError } = await supabase.from("order_item_addons").insert(addonRows)
-      if (addonsError) console.error("Falha ao salvar adicionais do pedido", addonsError)
-    }
-    // Incrementa uso do cupom se aplicado
-    if (coupon.status === "valid") {
-      await supabase.rpc("increment_coupon_uses", { p_store_id: store.id, p_code: coupon.code }).catch(() => {})
     }
     try {
       localStorage.setItem("hv_rua", rua.trim())

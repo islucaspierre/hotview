@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useMemo, useRef, useState, type ReactNode } from "react"
 import type { CartItem } from "@/lib/types"
-import { createClient } from "@/lib/supabase/client"
 
 interface CartContextValue {
   items: CartItem[]
@@ -31,9 +30,11 @@ export function CartProvider({ storeId, children }: { storeId?: string; children
     setItems((prev) => [...prev, { ...item, id }])
     if (storeId && !orderStartedRef.current) {
       orderStartedRef.current = true
-      createClient().from("orders").insert({ store_id: storeId, status: "started", subtotal: 0 }).then(({ error }) => {
-        if (error) console.error("Falha ao registrar início de pedido", error)
-      })
+      fetch("/api/order/start", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ storeId }),
+      }).catch(() => {})
     }
   }
 
